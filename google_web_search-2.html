@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nebeng Google</title>
+<style>
+  *{box-sizing:border-box}
+  body{
+    margin:0; min-height:100vh; display:flex; align-items:flex-start; justify-content:center; padding:max(24px,env(safe-area-inset-top)) 0 24px;
+    font-family:Arial,Helvetica,sans-serif; background:#f7f8fa; color:#202124;
+  }
+  .app{width:min(720px,92%); text-align:center}
+  .logo{font-size:clamp(34px,11vw,48px);line-height:1.1;font-weight:700;letter-spacing:-3px;margin-bottom:24px}
+  .logo span:nth-child(2){color:#4285f4}.logo span:nth-child(3){color:#ea4335}
+  .logo span:nth-child(4){color:#fbbc05}.logo span:nth-child(5){color:#4285f4}
+  .logo span:nth-child(6){color:#34a853}.logo span:nth-child(7){color:#ea4335}
+  .neben{display:inline-block;vertical-align:top;font-size:.5em;line-height:1;margin:.2em .12em 0 0;color:#3c4043;font-weight:700;font-style:italic;letter-spacing:-1px}
+  .sub{font-size:14px;font-style:italic;color:#5f6368;margin:0 auto 25px;max-width:440px;line-height:1.5}
+  form{
+    display:flex;gap:10px;background:white;border:1px solid #dfe1e5;border-radius:28px;
+    padding:7px 8px 7px 18px;box-shadow:0 2px 8px rgba(0,0,0,.08)
+  }
+  input{
+    flex:1;border:0;outline:0;font-size:17px;min-width:0;background:transparent
+  }
+  button{
+    border:0;border-radius:22px;padding:12px 22px;background:#1a73e8;color:#fff;
+    font-size:15px;font-weight:600;cursor:pointer
+  }
+  button:hover{background:#1558b0}
+  .options{margin-top:18px;display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
+  .chip{font-size:12px;color:#5f6368;background:#fff;border:1px solid #dadce0;border-radius:18px;padding:7px 11px}
+  .note{
+    margin-top:28px;padding:14px 18px;background:#fff;border-radius:12px;
+    border:1px solid #e4e6e8;text-align:center;font-size:14px;font-style:italic;line-height:1.6;color:#5f6368
+  }
+  .footer{margin-top:18px;font-size:12px;color:#9aa0a6}
+  @media(max-width:520px){
+    .logo{font-size:40px;margin-bottom:18px}
+    form{padding:6px 6px 6px 14px} input{font-size:16px} button{padding:11px 15px}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="logo" aria-label="nebeng Google">
+    <em class="neben">nebeng</em><span>G</span><span>o</span><span>o</span><span>g</span><span>l</span><span>e</span>
+  </div>
+
+  <form id="searchForm">
+    <input id="q" type="search" placeholder="Ketik yang ingin dicari..." autocomplete="off" autofocus>
+    <button type="submit" id="searchBtn">Cari</button>
+  </form>
+
+  <div class="note" id="quote"></div>
+
+  <div class="footer">sederhana • ringan • tanpa API key • by heri_euy</div>
+</div>
+
+<script>
+  const form = document.getElementById('searchForm');
+  const q = document.getElementById('q');
+
+  const quotes = [
+    "Sedikit demi sedikit, lama-lama menjadi bukit.",
+    "Bersakit-sakit dahulu, bersenang-senang kemudian.",
+    "Di mana ada kemauan, di situ ada jalan.",
+    "Berat sama dipikul, ringan sama dijinjing.",
+    "Air tenang menghanyutkan.",
+    "Tak ada gading yang tak retak.",
+    "Malu bertanya, sesat di jalan.",
+    "Rajin pangkal pandai, hemat pangkal kaya.",
+    "Ilmu padi: makin berisi, makin merunduk.",
+    "Sekali merengkuh dayung, dua tiga pulau terlampaui.",
+    "Berakit-rakit ke hulu, berenang-renang ke tepian.",
+    "Jangan menunda pekerjaan hari ini sampai esok hari.",
+    "Pengalaman adalah guru yang terbaik.",
+    "Lebih baik terlambat daripada tidak sama sekali.",
+    "Bersatu kita teguh, bercerai kita runtuh."
+  ];
+  (function(){
+    let i = Math.floor(Math.random() * quotes.length), last = -1;
+    try { last = parseInt(localStorage.getItem('q_last'), 10); } catch(e){}
+    if(i === last) i = (i + 1) % quotes.length;
+    try { localStorage.setItem('q_last', i); } catch(e){}
+    document.getElementById('quote').textContent = '“' + quotes[i] + '”';
+  })();
+
+  function doSearch(){
+    const query = q.value.trim();
+    if(!query){ q.focus(); return; }
+    const url = 'https://www.google.com/search?udm=14&q=' + encodeURIComponent(query);
+    try {
+      const top = window.top !== window ? window.top : window;
+      top.location.href = url;
+    } catch(err) {
+      window.open(url, '_blank', 'noopener');
+    }
+  }
+
+  form.addEventListener('submit', function(e){ e.preventDefault(); doSearch(); });
+  document.getElementById('searchBtn').addEventListener('click', function(e){ e.preventDefault(); doSearch(); });
+</script>
+</body>
+</html>
